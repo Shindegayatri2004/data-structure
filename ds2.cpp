@@ -1,148 +1,102 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class BST
-{
-int data;
-int current;
-BST *left;
-BST *right;
+class BST {
+public:
+    int data;
+    BST* left;
+    BST* right;
 
-BST(int x)
-{
-data=x;
+    // Constructor
+    BST(int x) {
+        data = x;
+        left = right = NULL;
+    }
+
+    // Function to insert a node
+    BST* insert(BST* root, int key) {
+        if (root == NULL) {
+            return new BST(key);
+        }
+
+        if (key < root->data) {
+            root->left = insert(root->left, key);
+        } else {
+            root->right = insert(root->right, key);
+        }
+
+        return root;
+    }
+
+    // Preorder Traversal
+    void preorder(BST* root) {
+        if (root == NULL) return;
+        cout << root->data << " ";
+        preorder(root->left);
+        preorder(root->right);
+    }
+
+    // Inorder Traversal
+    void inorder(BST* root) {
+        if (root == NULL) return;
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
+    }
+
+    // Postorder Traversal
+    void postorder(BST* root) {
+        if (root == NULL) return;
+        postorder(root->left);
+        postorder(root->right);
+        cout << root->data << " ";
+    }
+};
+
+int main() {
+    BST* root = NULL;
+    BST bst(0); // Creating an object to use member functions
+
+    int choice, val, ch1;
+
+    do {
+        cout << "\nEnter your choice:\n";
+        cout << "1. Insert\n2. Preorder\n3. Inorder\n4. Postorder\n";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert: ";
+                cin >> val;
+                root = bst.insert(root, val);
+                break;
+
+            case 2:
+                cout << "Preorder Traversal: ";
+                bst.preorder(root);
+                cout << endl;
+                break;
+
+            case 3:
+                cout << "Inorder Traversal: ";
+                bst.inorder(root);
+                cout << endl;
+                break;
+
+            case 4:
+                cout << "Postorder Traversal: ";
+                bst.postorder(root);
+                cout << endl;
+                break;
+
+            default:
+                cout << "Wrong Choice\n";
+        }
+
+        cout << "Do you want to continue? (1 for Yes, 0 for No): ";
+        cin >> ch1;
+
+    } while (ch1 == 1);
+
+    return 0;
 }
-
-
-void insert( int current,int key)
-{
-if(current=NULL)
-{
-    int x;
-    cout << "Enter the data you want to insert: ";
-    cin >> x;
-    X=newnode;
-    return new BST(x);
-    
-    else
-    {
-    while(current!=null)
-    {
-    prev=current;
-    if(key<current.data)
-    {
-    current=current.left;
-    }
-    else
-    {
-    current=current.right;
-    }
-    }
-    temp=newnode(key);
-    if(temp.data<prev.data)
-    {
-    prev.left=temp;
-    }
-    else
-    {
-    prev.right=temp;
-    }
-    }
-    }
-  }
-void preorder(BST* current)
- {
-    if (current == NULL) 
-    {
-    return;
-    }
-    cout << current->data << " ";
-    preorder(current->left);
-    preorder(current->right);
-}
-
-void inorder(BST* current)
- {
-    if (current == NULL) 
-    {
-    return;
-    }
-    inorder(current->left);
-    cout << current->data << " ";
-    inorder(current->right);
-}
-
-void postorder(BST* current) {
-    if (current == NULL) 
-    {
-    return;
-    }
-    postorder(current->left);
-    postorder(current->right);
-    cout << current->data << " ";
-}
-};  
-
-int main
-{
-BST *root=NULL;
-int ch,char,key,choice;
-
-do{
-cout<<"enter your choice";
-cout<<"1.insert\n 2.preorder \n 3.inorder 4.postorder\n ";
-cin>>choice;
-
-switch(choice)
-{
-case 1:
-if(root=NULL)
-{
-cout<<"creating the root node";
-cout<<"enter the root node value";
-cin>>val;
-root=new BST(val);
-}
-else
-{
-cout<<"inserting the newnode";
-cout<<"enter value to thye newnode";
-cin>>val;
-BST *newnode=new BST(val);
-insert(root,newnode);
-}
-break;
-case 2:
-cout<<"preorder";
-preorder(root);
-cout<<"endl";
-break;
-
-case 3:
-cout<<"inorder";
-inorder(root);
-cout<<"endl";
-break;
-
-case 4:
-cout<<"postorder";
-postorder(root);
-cout<<"endl";
-break;
-default:
-  cout << "Wrong Choice\n";
-}
-
-cout << "Do you want to continue? If yes, press 1: ";
-cin >> ch1;
-
-} while (ch1 == 1);
-
- return 0;
-}
-
-
-
-
-    
-    

@@ -1,95 +1,130 @@
 #include <iostream>
 using namespace std;
 
-class Node {
+class Node
+{
 public:
-    int vertex;
+    string name;
+    int time;
     Node* next;
-    Node(int v) : vertex(v), next(nullptr) {}
+    Node(string n, int t) : name(n), time(t), next(nullptr) {}
 };
 
-class Graph {
+class Graph 
+{
 public:
-    int V, E;
-    int matrix[100][100];   // Adjacency Matrix
-    Node* adjList[100];     // Adjacency List using linked list
+    int n, m;
+    string names[100];
+    int matrix[100][100];
+    Node* list[100];
 
-    // Constructor
-    Graph(int v, int e) {
-        V = v;
-        E = e;
-
-        // Initialize adjacency matrix to 0
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
+    Graph(int nodes, int edges) 
+    {
+        n = nodes;
+        m = edges;
+        for (int i = 0; i < n; i++) 
+        {
+            for (int j = 0; j < n; j++)
+            {
                 matrix[i][j] = 0;
             }
-            adjList[i] = nullptr; // Initialize linked list
+            list[i] = nullptr;
         }
     }
 
-    // Add edge for both matrix & linked list
-    void addEdge(int x, int y) {
-        if (x >= V || y >= V) {
-            cout << "Invalid edge: (" << x << ", " << y << ")" << endl;
+    int getIndex(string city)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if (names[i] == city)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    void addEdge(string a, string b, int t) 
+    {
+        int u = getIndex(a);
+        int v = getIndex(b);
+        
+        if (u == -1 || v == -1)
+        {
+            cout << "Invalid edge: (" << a << ", " << b << ")" << endl;
             return;
         }
+        
+        matrix[u][v] = t;
+        matrix[v][u] = t;
 
-        // Adjacency Matrix
-        matrix[x][y] = 1;
-        matrix[y][x] = 1;
+        Node* nodeA = new Node(b, t);
+        nodeA->next = list[u];
+        list[u] = nodeA;
 
-        // Adjacency List (Linked List Representation)
-        Node* newNodeX = new Node(y);
-        newNodeX->next = adjList[x];
-        adjList[x] = newNodeX;
-
-        Node* newNodeY = new Node(x);
-        newNodeY->next = adjList[y];
-        adjList[y] = newNodeY;
+        Node* nodeB = new Node(a, t);
+        nodeB->next = list[v];
+        list[v] = nodeB;
     }
 
-    // Display Adjacency Matrix
-    void displayMatrix() {
-        cout << "\nAdjacency Matrix:\n";
-        for (int i = 0; i < V; i++) {
-            for (int j = 0; j < V; j++) {
-                cout << matrix[i][j] << " ";
+    void displayMatrix() 
+    {
+        cout << "\nAdjacency Matrix (Time Representation):" << endl;
+        cout << "    ";
+        for (int i = 0; i < n; i++)
+        {
+            cout << names[i] << " ";
+        }
+        cout << endl;
+        for (int i = 0; i < n; i++)
+        {
+            cout << names[i] << " ";
+            for (int j = 0; j < n; j++) 
+            {
+                cout << matrix[i][j] << "   ";
             }
             cout << endl;
         }
     }
 
-    // Display Adjacency List
-    void displayList() {
-        cout << "\nAdjacency List (Linked List):\n";
-        for (int i = 0; i < V; i++) {
-            cout << i << " -> ";
-            Node* temp = adjList[i];
-            while (temp) {
-                cout << temp->vertex << " ";
+    void displayList() 
+    {
+        cout << "\nAdjacency List (Linked List with Time):" << endl;
+        for (int i = 0; i < n; i++)
+        {
+            cout << names[i] << " -> ";
+            Node* temp = list[i];
+            while (temp)
+            {
+                cout << "(" << temp->name << ", " << temp->time << " min)" << "-> ";
                 temp = temp->next;
             }
-            cout << endl;
+            cout << "NULL" << endl;
         }
     }
 };
 
-int main() {
-    int v, e;
-    cout << "Enter number of vertices: ";
-    cin >> v;
-    cout << "Enter number of edges: ";
-    cin >> e;
+int main()
+{
+    int n, m;
+    cout << "Enter number of cities: ";
+    cin >> n;
+    cout << "Enter number of roads(edges): ";
+    cin >> m;
 
-    Graph g(v, e);
+    Graph g(n, m);
+    
+    cout << "Enter city names: " << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> g.names[i];
+    }
 
-    // Taking edge input from the user
-    cout << "Enter " << e << " edges (u v format):\n";
-    for (int i = 0; i < e; i++) {
-        int u, v;
-        cin >> u >> v;
-        g.addEdge(u, v);
+    cout << "Enter " << m << " roads (city1 city2 travel_time_in_minutes):" << endl;
+    for (int i = 0; i < m; i++) {
+        string a, b;
+        int t;
+        cin >> a >> b >> t;
+        g.addEdge(a, b, t);
     }
 
     g.displayMatrix();
